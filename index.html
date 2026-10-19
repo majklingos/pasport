@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Pasport technologií</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+  <script type="module" src="/src/main.ts"></script>
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <div class="brand"><i></i><span>Pasport</span></div>
+    <button class="loc" data-act="sitesOpen" aria-label="Objekty, patra a výkresy"><small id="locSite">Objekt</small><b id="locFloor">Patro</b></button>
+    <label class="iconbtn cap" aria-label="Skenovat QR štítek" title="Skenovat QR štítek">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M8 9h3v3H8zM13 13h3v3h-3z"/></svg><input type="file" accept="image/*" data-scan aria-label="Vyfotit QR štítek">
+    </label>
+  </header>
+  <main id="main"></main>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-act="tab" data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h18v16H3zM3 12h7M10 4v5M14 12v8M14 15h7"/></svg>Půdorys</button>
+    <button role="tab" data-act="tab" data-tab="rooms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>Místnosti</button>
+    <button role="tab" data-act="tab" data-tab="list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>Technologie</button>
+    <button role="tab" data-act="tab" data-tab="labels"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2zM18 14h2M14 18v2"/></svg>Štítky</button>
+  </nav>
+</div>
+</body>
+</html>
