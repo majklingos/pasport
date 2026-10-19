@@ -36,7 +36,7 @@ Pravidla a kontext projektu pro Claude Code. Platí pro každou práci v tomto r
 - Test na telefonu: `npm.cmd run dev:mobil` spustí vývojový server viditelný ve Wi-Fi síti; adresa je na řádku `Network:` (IP počítače se může změnit).
 - `dev:mobil` běží záměrně na **HTTP** (rozhodnuto 19. 10. 2026). Kamera funguje i tak (výběr souboru s `capture`). Co vyžaduje HTTPS (instalace na plochu, offline, service worker), se testuje na **GitHub Pages**, kam se aplikace nasazuje automaticky od kroku 2. Self-signed certifikát ani vlastní certifikační autoritu (mkcert) nepoužívat. Pro rychlý lokální test instalace lze případně použít přesměrování `localhost` přes USB (chrome://inspect).
 
-## Rozhodnutí (stav 18. 10. 2026)
+## Rozhodnutí (stav 19. 10. 2026)
 
 | # | Rozhodnutí |
 |---|---|
@@ -52,6 +52,9 @@ Pravidla a kontext projektu pro Claude Code. Platí pro každou práci v tomto r
 | 10 | **Zpětná vazba v aplikaci** od V0: menu „Něco nefunguje / Podnět“ (typ chyba / podnět / dotaz, popis, volitelně snímek obrazovky) s automaticky přiloženou diagnostikou a kontaktem v sekci „O aplikaci“. Jde o zpětnou vazbu k aplikaci, ne o hlášení závad v budově. |
 | 11 | **Testování ve třech vrstvách:** automatické testy (Playwright, GitHub Actions blokuje nasazení při chybě), kontrola Claude v prohlížeči po každé verzi s testovacím protokolem, finální test autora na telefonu. Jen ukázková testovací data. |
 | 12 | **Detekce místností z rastru – první úkol V2:** (1) „Klepni na stěnu“: pipeta změří barvu a tloušťku stěny a nastaví detekci sama (posuvníky jen pod „Pokročilé“, odhad šířky dveří z tloušťky stěny); (2) nástroj „Zavřít otvor“: tahem přes dveře nakreslit čáru, kterou detekce bere jako stěnu, uložená k výkresu; (3) při detekci vždy náhled, co aplikace bere jako stěny. Zůstává potřeba i po vektorovém PDF (naskenované výkresy). Nastavení a zavřené otvory se ukládají jako opravy pro učení (rozhodnutí 9). |
+| 13 | **Označení technologií – dva identifikátory:** (a) **označení** čitelné pro lidi ve tvaru `KÓD-pořadí` (např. `PHP-012`, `FCU-104`), kde KÓD je krátký kód kategorie (1–4 písmena, nastavitelný u kategorie) a pořadí se číslují v rámci objektu a kategorie; **bez patra**, aby se označení neměnilo při přesunu zařízení nebo přejmenování patra a nemuselo se kvůli jedné změně přetiskovat více štítků; (b) **kód QR štítku** – náhodný, 6 znaků bez zaměnitelných znaků (0/O, 1/I), trvalý a neměnný. Na štítku velké označení + QR + malý kód. Obsah QR (odkaz na vlastní doménu) se rozhodne před prvním ostrým tiskem. Nahrazuje pořadová čísla `T-0001` z prototypu. |
+| 14 | **Přílohy (dokumenty):** technický list, manuál, revizní zpráva apod. lze připojit k **typu zařízení** (sdílí všechny kusy stejného modelu) nebo ke **konkrétnímu kusu**. Ve V0 jen v datovém modelu, nahrávání ve V1/V2, čtení údajů z dokumentu přes AI ve V2. |
+| 15 | **V0+ – rychlé opravy hned po V0** (před V1), ze zpětné vazby z testu 19. 10. 2026: (1) přejmenování kategorií; (2) ikony místo „x ks“ (ikona místnosti, ikona technologie); (3) menší přiblížení u „Ukázat na půdorysu“ a stejné tlačítko u technologie; (4) „+ Nová místnost“ přímo ve formuláři technologie, bez zavírání formuláře; (5) párování výkresů na mobilu: bod jde po vytvoření chytit a posunout prstem, při tažení se ukáže lupa se zvětšeným okolím, každý bod se potvrdí a teprve pak se výkresy spárují. |
 
 Pozn.: starší podklad projektu uvádí React Native + Expo. To je **nahrazeno** rozhodnutím o PWA (bod 2).
 
@@ -60,8 +63,9 @@ Pozn.: starší podklad projektu uvádí React Native + Expo. To je **nahrazeno*
 | Fáze | Obsah | Supabase |
 |---|---|---|
 | **V0 – Přenos** (aktuální) | viz zadání níže | ne |
+| **V0+ – Rychlé opravy** | viz rozhodnutí 15 | ne |
 | **V1 – Synchronizace** | přihlášení (jen autor), Supabase EU, sync mobil ↔ PC, fotky a výkresy v cloudu, AI čtení štítků a dohledání na webu přes Edge Function, vlastní katalog typů, hlášení ze „Něco nefunguje“ do Supabase (offline fronta, e-mailové upozornění, záznam pádů) | Free |
-| **V2 – Ladění funkcí** | jako první vylepšení detekce místností z rastru (rozhodnutí 12), ostrý provoz v testovací administrativní budově, test AI na reálných štítcích, vektorové čtení PDF, DXF, import půdorysů ze skenovacích aplikací, učení detekce, exporty, rychlost zadávání, přehled hlášení se stavem, „Co je nového“ | Pro |
+| **V2 – Ladění funkcí** | jako první vylepšení detekce místností z rastru (rozhodnutí 12), ostrý provoz v testovací administrativní budově, test AI na reálných štítcích, vektorové čtení PDF, DXF, import půdorysů ze skenovacích aplikací, učení detekce, exporty, rychlost zadávání, přehled hlášení se stavem, „Co je nového“, více vrstev najednou s průhledností + export aktuálního pohledu do PDF, náhled půdorysu ve formuláři technologie, vyhledávání (číslo místnosti, výrobní číslo, označení, název, neodborné výrazy z hlášení závad), import kategorií a místností z Excelu s návodem a vzorovým souborem, seznam technologií podle kategorie přes patra jako podklad pro revizi + hromadný export (kategorie, patra, vrstvy, průhlednosti → PDF a tabulka), čtení názvů místností z výkresu, filtr „Nenakreslené místnosti“; na konci V2 nebo ve V3 rozpoznávání technologií z výkresu (volba v „Najít všechny“: místnosti / technologie / konkrétní typ) | Pro |
 | **V3 – Komerční vrstva** | firmy a oddělení dat, role (správce / technik / klient jen čtení), revize a lhůty VTZ, platby, automatický převod DWG → DXF, podpora zákazníků (nápověda, e-mail podpory na vlastní doméně, souhlas s diagnostikou), případně APK a Google Play | Pro |
 
 ## Výchozí stav: prototyp
@@ -117,7 +121,7 @@ Cíl: aplikace běží samostatně mimo claude.ai, offline, s daty uloženými v
 - Nasazení na GitHub Pages přes GitHub Actions.
 
 **Kroky (každý zvlášť, s testem a commitem):**
-1. ✅ Kostra projektu (Vite, TypeScript, Git, README) a prototyp spuštěný beze změn funkcí, jen s datovou vrstvou v paměti. *Hotovo 19. 10. 2026, otestováno autorem na mobilu a PC; zpětná vazba z testu čeká na zpracování.*
+1. ✅ Kostra projektu (Vite, TypeScript, Git, README) a prototyp spuštěný beze změn funkcí, jen s datovou vrstvou v paměti. *Hotovo 19. 10. 2026, otestováno autorem na mobilu a PC; zpětná vazba z testu zpracována v rozhodnutích 12–15.*
 2. Testovací základ: ukázková data v `testdata/` (ukázkový objekt, vzorové PDF, vzorové fotky štítků), Playwright s prvním testem kostry, GitHub Actions (testy → nasazení jen při úspěchu), šablony `docs/testovaci-scenar.md` a `docs/testovaci-protokol.md`.
 3. Datová vrstva nad IndexedDB místo `CAP.db`; obrázky jako Blob místo `CAP.assets`.
 4. Datový model připravený na synchronizaci:
@@ -125,7 +129,11 @@ Cíl: aplikace běží samostatně mimo claude.ai, offline, s daty uloženými v
    - `createdAt`, `updatedAt` u každého záznamu,
    - mazání označením (`deletedAt`), ne fyzicky,
    - verze schématu a migrace,
-   - fotky a výkresy jako samostatné záznamy odkazované z dat.
+   - fotky a výkresy jako samostatné záznamy odkazované z dat,
+   - kód kategorie (1–4 písmena) a označení technologie `KÓD-pořadí` podle rozhodnutí 13,
+   - evidence štítků: kód štítku, stav (nepřiřazený / přiřazený / vyřazený), vazba na technologii nebo místnost,
+   - typ zařízení (výrobce + model) jako samostatný záznam, na který odkazují kusy,
+   - přílohy podle rozhodnutí 14 (soubor, druh dokumentu, vazba na typ nebo kus).
 5. Volitelný půdorys podle rozhodnutí 6: technologie může mít `roomId` prázdné (patří přímo patru), `x/y` nepovinné; seznamový režim pro patro bez výkresu.
 6. Záznam oprav detekce místností: u místnosti uložit původní návrh detekce (tvar, parametry detekce) a konečnou podobu po úpravě uživatelem.
 7. Zmenšování fotek před uložením (cca 1600 px, JPEG ~0,8; štítek musí zůstat čitelný).
