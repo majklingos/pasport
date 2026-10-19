@@ -34,6 +34,7 @@ Pravidla a kontext projektu pro Claude Code. Platí pro každou práci v tomto r
 
 - Windows 11, PowerShell. Spouštění skriptů je v PowerShellu zakázané, proto se v autorově terminálu volá **`npm.cmd`** (a `npx.cmd`) místo `npm`. Nastavení zabezpečení neměnit.
 - Test na telefonu: `npm.cmd run dev:mobil` spustí vývojový server viditelný ve Wi-Fi síti; adresa je na řádku `Network:` (IP počítače se může změnit).
+- `dev:mobil` běží záměrně na **HTTP** (rozhodnuto 19. 10. 2026). Kamera funguje i tak (výběr souboru s `capture`). Co vyžaduje HTTPS (instalace na plochu, offline, service worker), se testuje na **GitHub Pages**, kam se aplikace nasazuje automaticky od kroku 2. Self-signed certifikát ani vlastní certifikační autoritu (mkcert) nepoužívat. Pro rychlý lokální test instalace lze případně použít přesměrování `localhost` přes USB (chrome://inspect).
 
 ## Rozhodnutí (stav 18. 10. 2026)
 
