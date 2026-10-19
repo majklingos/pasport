@@ -28,6 +28,12 @@ Pravidla a kontext projektu pro Claude Code. Platí pro každou práci v tomto r
     - **Kontrola v prohlížeči:** po každém nasazení nové verze otevři zveřejněnou aplikaci a projdi testovací scénář (`docs/testovaci-scenar.md`): hlavní cesty + vše, co se ve verzi změnilo. Hodnoť i vzhled, srozumitelnost textů a složitost postupu. Výsledek zapiš do `docs/testovaci-protokol.md` (datum, verze, co prošlo, co ne, nalezené problémy).
     - **Test autora na telefonu:** na konci autorovi vypiš, co má otestovat sám – vše, co v prohlížeči ověřit nejde (kamera a fotky, skenování QR, instalace na plochu, offline, dotykové ovládání, použitelnost v terénu).
     - **Testovací data** jen ukázková (ukázkový objekt, vzorové PDF výkresy, vzorové fotky štítků) ve složce `testdata/`. Nikdy reálná data z budov.
+11. **Adresy pro mobil vždy i jako QR kód.** Kdykoli autorovi dáváš adresu k otevření na telefonu (vývojový server, GitHub Pages…), vygeneruj k ní rovnou QR kód jako obrázek. QR vznikne mimo projekt, bez přidání knihovny do repozitáře.
+
+## Prostředí autora
+
+- Windows 11, PowerShell. Spouštění skriptů je v PowerShellu zakázané, proto se v autorově terminálu volá **`npm.cmd`** (a `npx.cmd`) místo `npm`. Nastavení zabezpečení neměnit.
+- Test na telefonu: `npm.cmd run dev:mobil` spustí vývojový server viditelný ve Wi-Fi síti; adresa je na řádku `Network:` (IP počítače se může změnit).
 
 ## Rozhodnutí (stav 18. 10. 2026)
 
@@ -81,6 +87,15 @@ Závislosti na prostředí claude.ai, které je nutné nahradit:
 
 Knihovny z CDN v prototypu: pdf.js 3.11.174, jsQR 1.4.0, qrcode-generator 1.4.4. Ve V0 je nainstalovat přes npm, aby aplikace fungovala offline.
 
+## Aktuální stav kódu (po kroku 1)
+
+- `index.html` – kostra stránky; `src/main.ts` – vstupní bod; `src/styles.css` – vzhled.
+- `src/app.js` – kód prototypu (čistý JavaScript) téměř beze změny. Místo `window.claude.use` volá `createCap()` ze `src/cap/`.
+- `src/cap/` (TypeScript) – náhrada schopností claude.ai se **stejným rozhraním jako `CAP`**: `memory-db.ts` (databáze v paměti, `collection/doc/set/update/delete/onSnapshot`), `assets.ts` (obrázky jako blob: URL), `downloads.ts` (stažení souboru). `sample` je `null`, takže AI tlačítka jsou skrytá. Výměnou těchto modulů (IndexedDB v kroku 3) se zbytek aplikace nemění.
+- Data se zatím ztratí po zavření stránky; aplikace to ukazuje proužkem „Vývojová verze“.
+- pdf.js, jsQR, qrcode-generator a písma se zatím načítají z internetu (offline až s PWA).
+- `prototyp/pasport-v7.html` zůstává beze změny jako reference.
+
 ## Data z prototypu
 
 `data/` obsahuje export dat z prototypu: `data/db/<kolekce>/<id>.json` a `data/assets/<id>.png` (výkresy vrstev; pole `img.a` ve vrstvě odkazuje na id souboru). Jsou to jen testovací data (1 objekt, 2 patra, 1 místnost, výchozí kategorie, žádné technologie). Import stačí jako ověření, že přenos funguje.
@@ -99,7 +114,7 @@ Cíl: aplikace běží samostatně mimo claude.ai, offline, s daty uloženými v
 - Nasazení na GitHub Pages přes GitHub Actions.
 
 **Kroky (každý zvlášť, s testem a commitem):**
-1. Kostra projektu (Vite, TypeScript, Git, README) a prototyp spuštěný beze změn funkcí, jen s datovou vrstvou v paměti.
+1. ✅ Kostra projektu (Vite, TypeScript, Git, README) a prototyp spuštěný beze změn funkcí, jen s datovou vrstvou v paměti. *Hotovo 19. 10. 2026, otestováno autorem na mobilu a PC; zpětná vazba z testu čeká na zpracování.*
 2. Testovací základ: ukázková data v `testdata/` (ukázkový objekt, vzorové PDF, vzorové fotky štítků), Playwright s prvním testem kostry, GitHub Actions (testy → nasazení jen při úspěchu), šablony `docs/testovaci-scenar.md` a `docs/testovaci-protokol.md`.
 3. Datová vrstva nad IndexedDB místo `CAP.db`; obrázky jako Blob místo `CAP.assets`.
 4. Datový model připravený na synchronizaci:
