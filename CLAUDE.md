@@ -23,6 +23,11 @@ Pravidla a kontext projektu pro Claude Code. Platí pro každou práci v tomto r
 7. **Hlídej rozsah.** Pokud požadavek patří do pozdější fáze (viz níže), upozorni na to.
 8. **Vývoj jen na osobním počítači autora**, ne na firemním zařízení. Kód se zálohuje a nasazuje přes GitHub: na začátku každé session nejdřív stáhni poslední verzi (`git pull`), na konci práce vše commitni a pushni a připomeň to autorovi, pokud zůstaly neodeslané změny.
 9. **Produktová rozhodnutí** (co aplikace dělá, pro koho, cena, nové velké funkce) se dělají v chatu na claude.ai v projektu „Pasport aplikace“. Když narazíš na takovou otázku, nerozhoduj ji sám: popiš možnosti a doporuč autorovi probrat to tam.
+10. **Testování ve třech vrstvách.**
+    - **Automatické testy:** ke každé nové funkci napiš automatický test v prohlížeči (Playwright). Testy spusť po každé změně, před commitem musí procházet. GitHub Actions je spustí i před nasazením na GitHub Pages a při selhání nasazení zastaví.
+    - **Kontrola v prohlížeči:** po každém nasazení nové verze otevři zveřejněnou aplikaci a projdi testovací scénář (`docs/testovaci-scenar.md`): hlavní cesty + vše, co se ve verzi změnilo. Hodnoť i vzhled, srozumitelnost textů a složitost postupu. Výsledek zapiš do `docs/testovaci-protokol.md` (datum, verze, co prošlo, co ne, nalezené problémy).
+    - **Test autora na telefonu:** na konci autorovi vypiš, co má otestovat sám – vše, co v prohlížeči ověřit nejde (kamera a fotky, skenování QR, instalace na plochu, offline, dotykové ovládání, použitelnost v terénu).
+    - **Testovací data** jen ukázková (ukázkový objekt, vzorové PDF výkresy, vzorové fotky štítků) ve složce `testdata/`. Nikdy reálná data z budov.
 
 ## Rozhodnutí (stav 18. 10. 2026)
 
@@ -38,6 +43,7 @@ Pravidla a kontext projektu pro Claude Code. Platí pro každou práci v tomto r
 | 8 | Podklady: **primárně PDF** (cíl: vektorové čtení PDF pro detekci místností). DXF doplňkově (knihovna dxf-viewer, MPL 2.0). DWG jen přes převod na DXF (ručně v ODA File Converter, později automaticky na serveru). **Nepoužívat LibreDWG** ani nic pod GPL – aplikace bude placená. |
 | 9 | **Učení detekce místností** postupně: od V0 se ukládají opravy (co navrhla detekce vs. co uživatel opravil), ve V2 zapamatování nastavení výkresu + AI s příklady, vlastní model nejdřív ve V3+ a jen se souhlasem zákazníků. |
 | 10 | **Zpětná vazba v aplikaci** od V0: menu „Něco nefunguje / Podnět“ (typ chyba / podnět / dotaz, popis, volitelně snímek obrazovky) s automaticky přiloženou diagnostikou a kontaktem v sekci „O aplikaci“. Jde o zpětnou vazbu k aplikaci, ne o hlášení závad v budově. |
+| 11 | **Testování ve třech vrstvách:** automatické testy (Playwright, GitHub Actions blokuje nasazení při chybě), kontrola Claude v prohlížeči po každé verzi s testovacím protokolem, finální test autora na telefonu. Jen ukázková testovací data. |
 
 Pozn.: starší podklad projektu uvádí React Native + Expo. To je **nahrazeno** rozhodnutím o PWA (bod 2).
 
@@ -93,29 +99,30 @@ Cíl: aplikace běží samostatně mimo claude.ai, offline, s daty uloženými v
 
 **Kroky (každý zvlášť, s testem a commitem):**
 1. Kostra projektu (Vite, TypeScript, Git, README) a prototyp spuštěný beze změn funkcí, jen s datovou vrstvou v paměti.
-2. Datová vrstva nad IndexedDB místo `CAP.db`; obrázky jako Blob místo `CAP.assets`.
-3. Datový model připravený na synchronizaci:
+2. Testovací základ: ukázková data v `testdata/` (ukázkový objekt, vzorové PDF, vzorové fotky štítků), Playwright s prvním testem kostry, GitHub Actions (testy → nasazení jen při úspěchu), šablony `docs/testovaci-scenar.md` a `docs/testovaci-protokol.md`.
+3. Datová vrstva nad IndexedDB místo `CAP.db`; obrázky jako Blob místo `CAP.assets`.
+4. Datový model připravený na synchronizaci:
    - jednoznačná ID (UUID),
    - `createdAt`, `updatedAt` u každého záznamu,
    - mazání označením (`deletedAt`), ne fyzicky,
    - verze schématu a migrace,
    - fotky a výkresy jako samostatné záznamy odkazované z dat.
-4. Volitelný půdorys podle rozhodnutí 6: technologie může mít `roomId` prázdné (patří přímo patru), `x/y` nepovinné; seznamový režim pro patro bez výkresu.
-5. Záznam oprav detekce místností: u místnosti uložit původní návrh detekce (tvar, parametry detekce) a konečnou podobu po úpravě uživatelem.
-6. Zmenšování fotek před uložením (cca 1600 px, JPEG ~0,8; štítek musí zůstat čitelný).
-7. Fotky štítků se stavem „čeká na rozpoznání“ (AI se doplní ve V1).
-8. Export a import zálohy jako ZIP (JSON + fotky + výkresy).
-9. Import dat z `data/` (jednorázově).
-10. PWA: manifest, ikona, offline režim, instalace na plochu. Nasazení na GitHub Pages.
-11. Zpětná vazba „Něco nefunguje / Podnět“:
+5. Volitelný půdorys podle rozhodnutí 6: technologie může mít `roomId` prázdné (patří přímo patru), `x/y` nepovinné; seznamový režim pro patro bez výkresu.
+6. Záznam oprav detekce místností: u místnosti uložit původní návrh detekce (tvar, parametry detekce) a konečnou podobu po úpravě uživatelem.
+7. Zmenšování fotek před uložením (cca 1600 px, JPEG ~0,8; štítek musí zůstat čitelný).
+8. Fotky štítků se stavem „čeká na rozpoznání“ (AI se doplní ve V1).
+9. Export a import zálohy jako ZIP (JSON + fotky + výkresy).
+10. Import dat z `data/` (jednorázově).
+11. PWA: manifest, ikona, offline režim, instalace na plochu. Nasazení na GitHub Pages.
+12. Zpětná vazba „Něco nefunguje / Podnět“:
     - lokální záznam chyb aplikace (posledních cca 50, bez osobních dat),
     - formulář: typ (chyba / podnět / dotaz), popis, volitelně snímek obrazovky,
     - k hlášení se automaticky přiloží diagnostika (verze aplikace, zařízení, prohlížeč, poslední chyby),
     - odeslání předvyplněným e-mailem (adresu doplní autor), případně uložení hlášení do souboru,
     - sekce „O aplikaci“ s verzí a kontaktem.
-12. Test na reálném Android telefonu (Chrome) a na PC.
+13. Test na reálném Android telefonu (Chrome) a na PC.
 
-**Hotovo, když:** aplikace jde nainstalovat na mobil i PC z GitHub Pages, funguje bez internetu, data přežijí zavření prohlížeče a záloha ZIP jde vyexportovat a znovu naimportovat beze ztráty.
+**Hotovo, když:** automatické testy procházejí, aplikace jde nainstalovat na mobil i PC z GitHub Pages, funguje bez internetu, data přežijí zavření prohlížeče a záloha ZIP jde vyexportovat a znovu naimportovat beze ztráty.
 
 ## Bezpečnost a soukromí
 
