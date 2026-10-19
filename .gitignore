@@ -1,0 +1,25 @@
+# Knihovny nainstalované přes npm (dají se kdykoli znovu stáhnout)
+node_modules/
+
+# Data z budov: výkresy, fotky, exporty. Nikdy do veřejného repozitáře.
+data/
+
+# Výstupy sestavení (Vite)
+dist/
+dist-ssr/
+dev-dist/
+*.local
+
+# Lokální nastavení Claude Code pro tento počítač
+.claude/settings.local.json
+
+# Logy a dočasné soubory
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Nastavení editorů
+.vscode/*
+!.vscode/extensions.json
+.idea/
