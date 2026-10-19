@@ -44,6 +44,7 @@ Pravidla a kontext projektu pro Claude Code. Platí pro každou práci v tomto r
 | 9 | **Učení detekce místností** postupně: od V0 se ukládají opravy (co navrhla detekce vs. co uživatel opravil), ve V2 zapamatování nastavení výkresu + AI s příklady, vlastní model nejdřív ve V3+ a jen se souhlasem zákazníků. |
 | 10 | **Zpětná vazba v aplikaci** od V0: menu „Něco nefunguje / Podnět“ (typ chyba / podnět / dotaz, popis, volitelně snímek obrazovky) s automaticky přiloženou diagnostikou a kontaktem v sekci „O aplikaci“. Jde o zpětnou vazbu k aplikaci, ne o hlášení závad v budově. |
 | 11 | **Testování ve třech vrstvách:** automatické testy (Playwright, GitHub Actions blokuje nasazení při chybě), kontrola Claude v prohlížeči po každé verzi s testovacím protokolem, finální test autora na telefonu. Jen ukázková testovací data. |
+| 12 | **Detekce místností z rastru – první úkol V2:** (1) „Klepni na stěnu“: pipeta změří barvu a tloušťku stěny a nastaví detekci sama (posuvníky jen pod „Pokročilé“, odhad šířky dveří z tloušťky stěny); (2) nástroj „Zavřít otvor“: tahem přes dveře nakreslit čáru, kterou detekce bere jako stěnu, uložená k výkresu; (3) při detekci vždy náhled, co aplikace bere jako stěny. Zůstává potřeba i po vektorovém PDF (naskenované výkresy). Nastavení a zavřené otvory se ukládají jako opravy pro učení (rozhodnutí 9). |
 
 Pozn.: starší podklad projektu uvádí React Native + Expo. To je **nahrazeno** rozhodnutím o PWA (bod 2).
 
@@ -53,7 +54,7 @@ Pozn.: starší podklad projektu uvádí React Native + Expo. To je **nahrazeno*
 |---|---|---|
 | **V0 – Přenos** (aktuální) | viz zadání níže | ne |
 | **V1 – Synchronizace** | přihlášení (jen autor), Supabase EU, sync mobil ↔ PC, fotky a výkresy v cloudu, AI čtení štítků a dohledání na webu přes Edge Function, vlastní katalog typů, hlášení ze „Něco nefunguje“ do Supabase (offline fronta, e-mailové upozornění, záznam pádů) | Free |
-| **V2 – Ladění funkcí** | ostrý provoz v testovací administrativní budově, test AI na reálných štítcích, vektorové čtení PDF, DXF, import půdorysů ze skenovacích aplikací, učení detekce, exporty, rychlost zadávání, přehled hlášení se stavem, „Co je nového“ | Pro |
+| **V2 – Ladění funkcí** | jako první vylepšení detekce místností z rastru (rozhodnutí 12), ostrý provoz v testovací administrativní budově, test AI na reálných štítcích, vektorové čtení PDF, DXF, import půdorysů ze skenovacích aplikací, učení detekce, exporty, rychlost zadávání, přehled hlášení se stavem, „Co je nového“ | Pro |
 | **V3 – Komerční vrstva** | firmy a oddělení dat, role (správce / technik / klient jen čtení), revize a lhůty VTZ, platby, automatický převod DWG → DXF, podpora zákazníků (nápověda, e-mail podpory na vlastní doméně, souhlas s diagnostikou), případně APK a Google Play | Pro |
 
 ## Výchozí stav: prototyp
