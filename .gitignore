@@ -10,6 +10,11 @@ dist-ssr/
 dev-dist/
 *.local
 
+# Výstupy automatických testů (Playwright)
+test-results/
+playwright-report/
+blob-report/
+
 # Lokální nastavení Claude Code pro tento počítač
 .claude/settings.local.json
 

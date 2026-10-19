@@ -94,6 +94,8 @@ Knihovny z CDN v prototypu: pdf.js 3.11.174, jsQR 1.4.0, qrcode-generator 1.4.4.
 - `src/cap/` (TypeScript) – náhrada schopností claude.ai se **stejným rozhraním jako `CAP`**: `memory-db.ts` (databáze v paměti, `collection/doc/set/update/delete/onSnapshot`), `assets.ts` (obrázky jako blob: URL), `downloads.ts` (stažení souboru). `sample` je `null`, takže AI tlačítka jsou skrytá. Výměnou těchto modulů (IndexedDB v kroku 3) se zbytek aplikace nemění.
 - Data se zatím ztratí po zavření stránky; aplikace to ukazuje proužkem „Vývojová verze“.
 - pdf.js, jsQR, qrcode-generator a písma se zatím načítají z internetu (offline až s PWA).
+- ID nových záznamů přes `newId()` ze `src/cap/uuid.ts`, ne přímo `crypto.randomUUID()` – to na telefonu přes HTTP (dev:mobil) chybí.
+- Automatické testy: Playwright, `tests/`, `npm run test` (projekty „pc“ a „mobil“). Zbytek kroku 2 (testdata, GitHub Actions, scénář a protokol) zatím chybí.
 - `prototyp/pasport-v7.html` zůstává beze změny jako reference.
 
 ## Data z prototypu

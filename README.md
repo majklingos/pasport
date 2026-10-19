@@ -31,6 +31,11 @@ na povolení ve firewallu – povolte pro soukromé sítě.
 |---|---|
 | `npm run build` | zkontroluje kód a sestaví hotovou aplikaci do složky `dist/` |
 | `npm run preview` | spustí sestavenou aplikaci z `dist/` pro kontrolu |
+| `npm run test` | spustí automatické testy v prohlížeči (Playwright, jako PC i jako telefon) |
+
+Před prvním spuštěním testů je potřeba jednou stáhnout testovací prohlížeč: `npx playwright install chromium`.
+
+V PowerShellu se zakázanými skripty místo `npm` / `npx` použijte `npm.cmd` / `npx.cmd`.
 
 ## Struktura
 
@@ -41,6 +46,7 @@ na povolení ve firewallu – povolte pro soukromé sítě.
 | `src/app.js` | kód aplikace převzatý z prototypu (čistý JavaScript) |
 | `src/styles.css` | vzhled |
 | `src/cap/` | úložiště dat, obrázků a stahování (náhrada prostředí claude.ai) |
+| `tests/` | automatické testy (Playwright) |
 | `prototyp/pasport-v7.html` | původní prototyp z claude.ai, jen pro srovnání |
 
 Pravidla a plán vývoje jsou v [CLAUDE.md](CLAUDE.md).

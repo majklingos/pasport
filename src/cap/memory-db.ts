@@ -1,6 +1,6 @@
 // Databáze v paměti se stejným rozhraním, jaké prototyp používal na claude.ai
 // (collection(...).doc(...).set/update/delete a onSnapshot).
-// Data se ztratí po zavření stránky – v kroku 2 ji nahradí IndexedDB.
+// Data se ztratí po zavření stránky – v kroku 3 ji nahradí IndexedDB.
 
 export type DocData = Record<string, unknown>;
 
